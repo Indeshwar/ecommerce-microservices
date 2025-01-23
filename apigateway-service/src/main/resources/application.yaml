@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: inventory-service
+          uri: http://localhost:8081/
+          Predicates:
+            - Path=/inventory-service/**
+          filters:
+            - RewritePath=/inventory-service/(?<subUrl>.*),/api/${subUrl}
+            - RemoveResponseHeader=X-Powered-By
+        - id: order-service
+          uri: http://localhost:8082/
+          Predicates:
+            - Path=/order-service/**
+          filters:
+            - RewritePath=/order-service/(?<subUrl>.*),/api/${subUrl}
+            - RemoveResponseHeader=X-Powered-By
+
+
