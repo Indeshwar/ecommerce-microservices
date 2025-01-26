@@ -20,6 +20,7 @@
         <module>inventry-service</module>
         <module>apigateway-service</module>
         <module>order-service</module>
+        <module>authorization-service</module>
     </modules>
 
     <properties>
