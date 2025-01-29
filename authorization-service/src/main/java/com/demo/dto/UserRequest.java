@@ -17,7 +17,7 @@ public class UserRequest {
     @NotBlank(message = "Password can not be empty")
     @Size(min=5 , message = "Password must be at least 5 characters long")
     private String password;
-    @Pattern(regexp = "\\d{3}-\\d{3}-\\d{4}", message = "Enter valid phone number")
+    @Pattern(regexp = "\\d{3}\\s\\d{3}\\s\\d{4}", message = "Enter valid phone number")
     private String phoneNumber;
 
     public String getFullName() {

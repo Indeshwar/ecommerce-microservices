@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import com.demo.dto.UserRequest;
+import com.demo.dto.UserResponse;
 import com.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class UserController {
     }
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequest request){
-        return new ResponseEntity<>("User created", HttpStatus.CREATED);
+        String response = userService.registerUser(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
