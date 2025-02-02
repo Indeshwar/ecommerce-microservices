@@ -1,5 +1,6 @@
 package com.demo.controller;
 
+import com.demo.dto.LogInRequest;
 import com.demo.dto.UserRequest;
 import com.demo.dto.UserResponse;
 import com.demo.service.UserService;
@@ -28,5 +29,11 @@ public class UserController {
     public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequest request){
         String response = userService.registerUser(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/logIn")
+    public ResponseEntity<String> logIn(@Valid @RequestBody LogInRequest request){
+        String response = userService.LonIn(request);
+        return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
