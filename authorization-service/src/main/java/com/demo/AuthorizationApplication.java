@@ -21,7 +21,7 @@ public class AuthorizationApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Role user = new Role("USER");
-        Role admin = new Role("ADMINgit ");
+        Role admin = new Role("ADMIN");
         roleRepository.saveAll(List.of(admin, user));
 
     }
