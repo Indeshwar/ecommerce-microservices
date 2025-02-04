@@ -1,22 +1,28 @@
 package com.demo.config;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.demo.filter.JWTAuthenticationVerifierFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class WebSecurityConfiguration {
-    @Autowired
     private UserDetailsService userDetailsService;
+    private JWTAuthenticationVerifierFilter authenticationVerifierFilter;
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    public WebSecurityConfiguration(UserDetailsService userDetailsService, JWTAuthenticationVerifierFilter authenticationVerifierFilter, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+        this.userDetailsService = userDetailsService;
+        this.authenticationVerifierFilter = authenticationVerifierFilter;
+        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -34,8 +40,11 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws  Exception{
         http.csrf(p->p.disable());
-        http.authorizeHttpRequests(c -> c.requestMatchers("/authorization/message", "/authorization/register", "/authorization/logIn").permitAll()
-                .requestMatchers("/authorization/user").authenticated());
+        http.authorizeHttpRequests(c -> c.requestMatchers("/api/v1/validConnection/*").permitAll()
+                .anyRequest().authenticated())
+                .sessionManagement(s-> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(e-> e.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .addFilterBefore(authenticationVerifierFilter, UsernamePasswordAuthenticationFilter.class); //authenticationVerifierFilter execute before UsernamePasswordAuthenticationFilter
         return http.build();
     }
 
