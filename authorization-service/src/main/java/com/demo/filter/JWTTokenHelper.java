@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidKeyException;
@@ -123,9 +124,9 @@ public class JWTTokenHelper {
         return userName;
     }
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token, UserDetails userDetails){
         final String userName = getUserNameFromToken(token);
-        if(userName != null && !isTokenExpired(token)){
+        if(userName != null && userName.equals(userDetails.getUsername()) && !isTokenExpired(token)){
             return true;
         }
         return false;
