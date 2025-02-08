@@ -18,6 +18,7 @@ public class ValidateTokenController {
     public ResponseEntity<TokenValidationResponse> validateToken(HttpServletRequest request){
         String userName = (String) request.getAttribute("userName");
         Set<SimpleGrantedAuthority> grantedAuthorities = (Set)request.getAttribute("authority");
+        String token =(String) request.getAttribute("jwt");
 
         TokenValidationResponse response = new TokenValidationResponse();
         response.setStatus("OK");
@@ -25,6 +26,8 @@ public class ValidateTokenController {
         response.setAuthorities(grantedAuthorities);
         response.setAuthenticated(true);
         response.setMethodType(HttpMethod.GET.toString());
+        response.setToken(token);
+
 
         return ResponseEntity.ok(response);
 

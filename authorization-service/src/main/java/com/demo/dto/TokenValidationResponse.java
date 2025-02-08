@@ -12,6 +12,15 @@ public class TokenValidationResponse {
     private String methodType;
     private String username;
     private Set<SimpleGrantedAuthority> authorities;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getStatus() {
         return status;
