@@ -22,7 +22,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/logIn")
+    @PostMapping("/login")
     public ResponseEntity<String> logIn(@Valid @RequestBody LogInRequest request){
         String response = userService.LonIn(request);
         return  new ResponseEntity<>(response, HttpStatus.OK);
