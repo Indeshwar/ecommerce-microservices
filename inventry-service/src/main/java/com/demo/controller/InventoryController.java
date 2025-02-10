@@ -11,4 +11,9 @@ public class InventoryController {
     public String getMessage(){
         return "This is Inventory Service";
     }
+
+    @GetMapping("/inventory")
+    public String getInventory(){
+        return "phone, laptop";
+    }
 }
