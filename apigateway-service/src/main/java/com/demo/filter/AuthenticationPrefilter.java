@@ -60,12 +60,20 @@ public class AuthenticationPrefilter extends AbstractGatewayFilterFactory<Authen
                         .bodyToMono(TokenValidationResponse.class)// Mapping the response in the TokenValidationResponse class
                         .switchIfEmpty(Mono.error(new RuntimeException("Empty response from authentication service")))
                         .flatMap(response->{
-                            //adding userName and authority in header of request before forwarding to the appropriate server
-                            exchange.getRequest().mutate()
+
+                            //Creates a mutated copy of the original request
+                            //Add userName and authority in the header
+                            //Creates the modified ServerHttpRequest object.
+                            ServerHttpRequest httpRequest = exchange.getRequest().mutate()
                                     .header("userName", response.getUsername())
                                     .header("authority", response.getAuthorities()
-                                            .stream().map(Authorities:: getAuthority).collect(Collectors.joining(",")));
-                            return  chain.filter(exchange); //forward to the server
+                                            .stream().map(Authorities::getAuthority).collect(Collectors.joining(",")))
+                                    .build();
+                            //Create a mutate copy of current exchange
+                            //And replace the request with new httpRequest
+                            //Creates the Updated ServerWebExchange object.
+                            ServerWebExchange mutateExchange = exchange.mutate().request(httpRequest).build();
+                            return  chain.filter(mutateExchange); //forward to the next server
                         }).onErrorResume(error->{
                             log.error("Error during validating the token: {}", error.getMessage(), error);
                             HttpStatusCode errorCode = error instanceof WebClientResponseException
