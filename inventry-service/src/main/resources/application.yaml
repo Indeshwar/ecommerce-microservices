@@ -3,3 +3,10 @@ server:
 spring:
   application:
     name: inventory-service
+
+aws:
+  region: us-east-1
+  accessKeyId: Mykey
+  secretAccessKey: mySecretKey04
+  dynamodb:
+    endpoint: http://localhost:8000
