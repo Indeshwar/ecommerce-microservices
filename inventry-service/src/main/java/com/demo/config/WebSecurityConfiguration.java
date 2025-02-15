@@ -24,7 +24,10 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return  http.csrf(customizer->customizer.disable()) //Disable the csrf
-                .authorizeHttpRequests(request-> request.anyRequest().authenticated()) // Allows only authenticated requests
+                .authorizeHttpRequests(request-> request
+                        .requestMatchers("/api/message").hasAuthority("ADMIN") //Allow ADMIN role to access
+                        .requestMatchers("/api/inventory").hasAuthority("USER") //Allow USER role to access
+                        .anyRequest().authenticated()) // Allows only authenticated requests
                 .exceptionHandling(exception-> exception.authenticationEntryPoint(restAuthenticationEntryPoint)) //Throw the exception if the unauthenticated requests
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Make Session Stateless
                 .addFilterBefore(jwtVerifierFilter, UsernamePasswordAuthenticationFilter.class) //Execute jwtVerifierFilter before UsernamePasswordAuthenticationFilter
