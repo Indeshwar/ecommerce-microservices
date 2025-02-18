@@ -30,13 +30,13 @@ public class JWTVerifierFilter extends OncePerRequestFilter {
         String userName = request.getHeader("userName");
         String authority = request.getHeader("authority");
 
-        if(authHeader == null && !authHeader.startsWith("Bearer")){
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if(authHeader == null && !authHeader.startsWith("Bearer")){
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
         log.info("Auth Header is : {} ", authHeader);
-        log.info("userName : {}", userName);
-        log.info("authority : {}", authority);
+        log.info("userName is : {}", userName);
+        log.info("authority is : {}", authority);
 
         if(authority != null){
             Set<SimpleGrantedAuthority> simpleGrantedAuthorities = Arrays.stream(authority.split(","))

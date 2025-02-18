@@ -4,6 +4,7 @@ import com.demo.filter.JWTVerifierFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,8 +26,9 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return  http.csrf(customizer->customizer.disable()) //Disable the csrf
                 .authorizeHttpRequests(request-> request
-                        .requestMatchers("/api/message").hasAuthority("ADMIN") //Allow ADMIN role to access
-                        .requestMatchers("/api/inventory").hasAuthority("USER") //Allow USER role to access
+                        //.requestMatchers("/api/v1/save").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/save").hasAuthority("USER")
+                        .requestMatchers("/api/v1/message", "/api/v1/inventory").hasAuthority("USER") //Allow USER role to access
                         .anyRequest().authenticated()) // Allows only authenticated requests
                 .exceptionHandling(exception-> exception.authenticationEntryPoint(restAuthenticationEntryPoint)) //Throw the exception if the unauthenticated requests
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Make Session Stateless
