@@ -7,6 +7,10 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Repository
 public class InventoryRepository {
     private final DynamoDbTable<Inventory> inventoryTable;
@@ -16,10 +20,15 @@ public class InventoryRepository {
     }
 
     public void saveInventory(Inventory inventory){
-        inventoryTable.putItem(inventory);
+       inventoryTable.putItem(inventory);
     }
 
-    public Inventory findById(String inventoryId){
-        return  inventoryTable.getItem(r->r.key(k-> k.partitionValue(inventoryId)));
+    public Optional<Inventory> findById(String inventoryId){
+        return  Optional.ofNullable(inventoryTable.getItem(r->r.key(k-> k.partitionValue(inventoryId))));
+    }
+
+
+    public List<Inventory> findAll() {
+        return  inventoryTable.scan().items().stream().collect(Collectors.toList());
     }
 }

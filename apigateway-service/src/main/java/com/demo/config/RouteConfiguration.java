@@ -16,7 +16,7 @@ public class RouteConfiguration {
                         .filters(f -> f.rewritePath("/authorization-service/(?<subUrl>.*)","/api/v1/validConnection/${subUrl}").filters(auth.apply(new AuthenticationPrefilter.Config())))
                         .uri("http://localhost:8083/"))
                 .route("inventory-service", r -> r.path("/inventory-service/**")
-                        .filters(f -> f.rewritePath("/inventory-service/(?<subUrl>.*)","/api/${subUrl}").filters(auth.apply(new AuthenticationPrefilter.Config())))
+                        .filters(f -> f.rewritePath("/inventory-service/(?<subUrl>.*)","/api/v1/${subUrl}").filters(auth.apply(new AuthenticationPrefilter.Config())))
                         .uri("http://localhost:8081/"))
                 .route("order-service", r -> r.path("/order-service/**")
                         .filters(f-> f.rewritePath("/order-service/(?<subUrl>.*)", "/api/${subUrl}").filters(auth.apply(new AuthenticationPrefilter.Config())))
