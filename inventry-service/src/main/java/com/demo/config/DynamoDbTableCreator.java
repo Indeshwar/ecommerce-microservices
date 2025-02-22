@@ -25,15 +25,49 @@ public class DynamoDbTableCreator {
 
         CreateTableRequest tableRequest = CreateTableRequest.builder()
                 .tableName(tableName)
-                .keySchema(KeySchemaElement.builder() //Build the object of KeySchema
-                        .attributeName("inventoryId")  // Set the attribute name as inventoryId
-                        .keyType(KeyType.HASH)            //Make  inventoryId as partition key
-                        .build())
-                .attributeDefinitions(AttributeDefinition.builder() //Build the object of AttributeDefinition that specify the type of attribute
-                        .attributeName("inventoryId")
-                        .attributeType(ScalarAttributeType.S) //Set the attribute inventoryId type as Scalar String
-                        .build())
-                .billingMode(BillingMode.PAY_PER_REQUEST)
+                .keySchema(
+                        KeySchemaElement.builder()
+                                .attributeName("inventoryId")  // Primary Key
+                                .keyType(KeyType.HASH)
+                                .build()
+                )
+                .attributeDefinitions(
+                        AttributeDefinition.builder()
+                                .attributeName("inventoryId") // Primary Key attribute
+                                .attributeType(ScalarAttributeType.S)
+                                .build(),
+                        AttributeDefinition.builder()
+                                .attributeName("category") // GSI Partition Key
+                                .attributeType(ScalarAttributeType.S)
+                                .build(),
+                        AttributeDefinition.builder()
+                                .attributeName("createdAt") // GSI Sort Key
+                                .attributeType(ScalarAttributeType.S)
+                                .build()
+                )
+                .globalSecondaryIndexes(
+                        GlobalSecondaryIndex.builder()
+                                .indexName("categoryIndex") // GSI Name
+                                .keySchema(
+                                        KeySchemaElement.builder()
+                                                .attributeName("category") // GSI Partition Key
+                                                .keyType(KeyType.HASH)
+                                                .build(),
+                                        KeySchemaElement.builder()
+                                                .attributeName("createdAt") // GSI Sort Key
+                                                .keyType(KeyType.RANGE)
+                                                .build()
+                                )
+                                .projection(Projection.builder()
+                                        .projectionType(ProjectionType.ALL) // Store all attributes
+                                        .build())
+                                .provisionedThroughput(ProvisionedThroughput.builder() // Required if using Provisioned mode
+                                        .readCapacityUnits(5L) // Adjust as needed
+                                        .writeCapacityUnits(5L)
+                                        .build())
+                                .build()
+                )
+                .billingMode(BillingMode.PAY_PER_REQUEST) // Set billing mode at table level
                 .build();
 
         dynamoDbClient.createTable(tableRequest);
