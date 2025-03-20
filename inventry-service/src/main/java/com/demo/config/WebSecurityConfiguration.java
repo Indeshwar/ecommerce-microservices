@@ -28,7 +28,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(request-> request
                         //.requestMatchers("/api/v1/save").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/save").hasAuthority("USER")
-                        .requestMatchers("/api/v1/message", "/api/v1/inventory").hasAuthority("USER") //Allow USER role to access
+                        .requestMatchers("/api/v1/*").hasAuthority("USER") //Allow USER role to access
                         .anyRequest().authenticated()) // Allows only authenticated requests
                 .exceptionHandling(exception-> exception.authenticationEntryPoint(restAuthenticationEntryPoint)) //Throw the exception if the unauthenticated requests
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Make Session Stateless

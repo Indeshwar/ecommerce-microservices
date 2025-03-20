@@ -40,7 +40,7 @@ public class InventoryService {
     public Inventory findInventoryById(String inventoryId){
         Optional<Inventory> inventory = inventoryRepository.findById(inventoryId);
         if(inventory.isEmpty()){
-            throw new InventoryNotFoundException(inventoryId +  "Not found");
+            throw new InventoryNotFoundException(inventoryId +  " Not found");
         }
         return inventory.get();
     }
@@ -48,4 +48,16 @@ public class InventoryService {
     public List<Inventory> getAllInventory() {
        return inventoryRepository.findAll();
     }
+
+    public List<Inventory> findInventoryByCategory(String category){
+        log.info("This is category for inventory service : {}", category);
+        return inventoryRepository.findInventoryByCategory(category);
+    }
+
+    public void deleteInventory(String inventoryId) {
+        //Check if inventory is available
+        findInventoryById(inventoryId);
+        inventoryRepository.deleteInventory(inventoryId);
+    }
+
 }
