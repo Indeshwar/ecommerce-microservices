@@ -67,4 +67,36 @@ public class TestInventoryService {
         verify(inventoryRepository, times(1)).findAll();
     }
 
+    @Test
+    void testFindInventoryByCategory(){
+        List<Inventory> inventories = new ArrayList<>();
+        Inventory i1 = new Inventory();
+        i1.setInventoryId(UUID.randomUUID().toString());
+        i1.setCategory("Iphone");
+        Inventory i2 = new Inventory();
+        i2.setInventoryId(UUID.randomUUID().toString());
+        i2.setCategory("Iphone");
+        Inventory i3 = new Inventory();
+        i3.setInventoryId(UUID.randomUUID().toString());
+        i3.setCategory("Samsung");
+
+        //Adding inventories in list
+        inventories.add(i1);
+        inventories.add(i2);
+        inventories.add(i3);
+
+        //Mock the inventory repository
+        when(inventoryRepository.findInventoryByCategory(any(String.class))).thenReturn(inventories);
+
+        //Call the method
+        List<Inventory> result = inventoryService.findInventoryByCategory("Iphone");
+        //assert
+        assertEquals(2, result.size());
+        //verify
+        verify(inventoryRepository, times(1)).findInventoryByCategory(any(String.class));
+
+
+
+    }
+
 }

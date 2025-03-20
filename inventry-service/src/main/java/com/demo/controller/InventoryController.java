@@ -35,5 +35,27 @@ public class InventoryController {
         return  new ResponseEntity<>(inventories, HttpStatus.OK);
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<List<Inventory>> findInventoryByCategory(@RequestBody InventoryRequest request){
+        System.out.println("category : " + request.getCategory());
+        List<Inventory> inventories = inventoryService.findInventoryByCategory(request.getCategory());
+        return new ResponseEntity<>(inventories, HttpStatus.OK);
+    }
+
+    @GetMapping("/inventoryId/{inventoryId}")
+    public ResponseEntity<Inventory> findByInventoryId(@PathVariable String inventoryId){
+        Inventory inventory = inventoryService.findInventoryById(inventoryId);
+        return ResponseEntity.ok(inventory);
+    }
+
+    @DeleteMapping("/inventoryId/{inventoryId}")
+    public ResponseEntity<Void> deleteInventory(@PathVariable String inventoryId){
+        inventoryService.deleteInventory(inventoryId);
+        return  ResponseEntity.ok().build();
+    }
+
+
+
+
 
 }
