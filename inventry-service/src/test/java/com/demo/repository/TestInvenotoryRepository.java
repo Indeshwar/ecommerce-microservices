@@ -37,13 +37,18 @@ public class TestInvenotoryRepository {
 
     @Test
     void testDeleteTable(){
-        String tableName = "user";
+        String tableName = "inventory";
         try{
             DeleteTableRequest deleteTableRequest = DeleteTableRequest.builder().tableName(tableName).build();
             dynamoDbClient.deleteTable(deleteTableRequest);
         }catch (ResourceNotFoundException e){
             System.out.println("Table " + tableName + " does not exist");
         }
+    }
+
+    @Test
+    void testFindInventoryByCategory(){
+        inventoryRepository.findInventoryByCategory("Samsung");
     }
 
 }

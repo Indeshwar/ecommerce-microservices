@@ -1,5 +1,6 @@
 package com.demo.config;
 
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
@@ -16,8 +17,20 @@ public class DynamoDbTableCreator {
         //Check if table already exist
         try{
             //Fetch the metadata of specific dynamoDb table
-            dynamoDbClient.describeTable(DescribeTableRequest.builder().tableName(tableName).build());
+           DescribeTableResponse response = dynamoDbClient.describeTable(DescribeTableRequest.builder().tableName(tableName).build());
+            TableDescription tableDescription = response.table();
             System.out.println("Table " + tableName + " is already exist");
+            System.out.println("Table Name: " + tableDescription.tableName());
+            System.out.println("Global Secondary Indexes:");
+
+            if (tableDescription.globalSecondaryIndexes() != null) {
+                tableDescription.globalSecondaryIndexes().forEach(gsi ->
+                        System.out.println(" - " + gsi.indexName())
+                );
+
+            } else {
+                System.out.println("No Global Secondary Indexes found.");
+            }
             return;
         }catch (ResourceNotFoundException e){
             System.out.println("Table " + tableName + " is creating");
@@ -47,7 +60,7 @@ public class DynamoDbTableCreator {
                 )
                 .globalSecondaryIndexes(
                         GlobalSecondaryIndex.builder()
-                                .indexName("categoryIndex") // GSI Name
+                                .indexName("CategoryIndex") // GSI Name
                                 .keySchema(
                                         KeySchemaElement.builder()
                                                 .attributeName("category") // GSI Partition Key

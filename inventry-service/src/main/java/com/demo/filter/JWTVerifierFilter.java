@@ -51,8 +51,6 @@ public class JWTVerifierFilter extends OncePerRequestFilter {
             //Set the authentication object in the Security Context
             //So that subsequent filter can access it
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            //Forward the request and response to the next filter
-            filterChain.doFilter(request, response);
 
         }
 
